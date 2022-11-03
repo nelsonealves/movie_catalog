@@ -1,0 +1,65 @@
+version: '3.3'
+
+services:
+  mysql_db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      TZ: 'America/Sao_Paulo'
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+    # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+    # Opens port 3306 on the container
+      - '3306'
+    # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./dump:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+  
+  backend:
+    build: ./back-end
+    container_name: api_backend
+    ports: 
+      - '4000:4000'
+    volumes:
+      - ./back-end:/app
+      - ./app/node_modules
+    depends_on:
+      - mysql_db
+    networks:
+      - backend
+      - frontend
+    stdin_open: true
+    tty: true
+  
+  frontend:
+    build: ./front-end
+    container_name: react_app
+    ports: 
+      - '3000:3000'
+    volumes:
+      - ./front-end:/react
+      - ./react/node_modules
+    depends_on:
+      - backend
+    networks:
+      - frontend
+    stdin_open: true
+    tty: true
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+volumes:
+  my-db:

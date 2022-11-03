@@ -1,0 +1,28 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Nelson Alves",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon -L ./src/main/index",
+    "prisma:generate": "prisma generate --schema=./src/infra/prisma/schema.prisma",
+    "prisma:push": "prisma db push --schema=./src/infra/prisma/schema.prisma",
+    "swagger:autogen": "node ./src/main/config/express/swagger"
+  },
+  "devDependencies": {
+    "axios": "^1.1.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "prisma": "^4.5.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.5.0",
+    "dotenv": "^16.0.3",
+    "global": "^4.4.0",
+    "nodemon": "^2.0.20",
+    "swagger-autogen": "^2.22.0",
+    "swagger-ui-express": "^4.5.0"
+  }
+}
